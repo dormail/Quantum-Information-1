@@ -1,0 +1,202 @@
+\documentclass[english]{article}
+\usepackage{booktabs}
+\usepackage{babel}
+\usepackage{varioref}
+% Hyperlinks im Dokument
+\usepackage[
+  english,
+  unicode,        % Unicode in PDF-Attributen erlauben
+  pdfusetitle,    % Titel, Autoren und Datum als PDF-Attribute
+  pdfcreator={},  % ┐ PDF-Attribute säubern
+  pdfproducer={}, % ┘
+]{hyperref}
+% erweiterte Bookmarks im PDF
+\usepackage{bookmark}
+% Captions schöner machen.
+\usepackage[
+  labelfont=bf,        % Tabelle x: Abbildung y: ist jetzt fett
+  font=small,          % Schrift etwas kleiner als Dokument
+  width=0.9\textwidth, % maximale Breite einer Caption schmaler
+]{caption}
+% subfigure, subtable, subref
+\usepackage{subcaption}
+% Grafiken können eingebunden werden
+\usepackage{graphicx}
+
+% schöne Tabellen
+\usepackage{booktabs}
+
+% Verbesserungen am Schriftbild
+\usepackage{microtype}
+
+\usepackage[margin=2cm]{geometry}
+\usepackage{amsmath, amssymb}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{aligned-overset}
+\usepackage{subcaption}
+\usepackage{tabularx} % fuer gleichungen nebeneinander
+\usepackage{wrapfig} % damit figures neben text sien koennen
+
+% partielle ableitungen
+\newcommand{\delr}{\partial_r}
+\newcommand{\delt}{\partial_t}
+\newcommand{\deltheta}{\partial_\theta}
+\newcommand{\delphi}{\partial_\varphi}
+
+% elektrische feldkonstante
+\newcommand{\epsz}{\epsilon_0}
+% 1 / 4pi eps
+\newcommand{\kco}{\frac{1}{4\pi\epsilon_0}}
+% del fuer partial
+\newcommand{\del}{\partial}
+
+% div und rot
+\newcommand{\diver}{\vec \nabla \cdot}
+\newcommand{\rot}{\vec \nabla \times}
+
+% hyperbolische funktionen
+\newcommand{\arsinh}{\text{arsinh}}
+\newcommand{\arcosh}{\text{arcosh}}
+\newcommand{\artanh}{\text{artanh}}
+
+% fuer impedanzen 
+\newcommand{\omegaC}{\omega C}
+\newcommand{\omegaL}{\omega L}
+\newcommand{\omegaR}{\omega R}
+\newcommand{\omegaLC}{\omega LC}
+\newcommand{\omegaLCR}{\omega LCR}
+\newcommand{\omegaCR}{\omega CR}
+
+% brackets
+\usepackage{mathtools}
+\DeclarePairedDelimiter\bra{\langle}{\rvert}
+\DeclarePairedDelimiter\ket{\lvert}{\rangle}
+\DeclarePairedDelimiterX\braket[2]{\langle}{\rangle}{#1 \delimsize\vert #2}
+
+% fancy header
+\usepackage{fancyhdr}
+\fancyhf{}
+% vspaces in den headern fuer Distanzen notwendig
+% linke Seite: Namen der Abgabegruppe
+\lhead{\textbf{Quantum Information 1}\vspace{1.5cm}}
+% rechte Seite: Modul, Gruppe, Semester
+\rhead{\textbf{Matthias Maile}\vspace{1.5cm}}
+% Center: nr. des blattes
+\chead{\vspace{2.5cm}\huge{\textbf{1st Assignment}}}
+% benoetigt damit der eigentliche Text nicht in der Überschrift steckt
+\setlength{\headheight}{4cm}
+
+% zum zeichnen tikz
+\usepackage{tikz}
+
+% fuer fabigen text
+\usepackage{xcolor}
+
+% irgendwas mit figures
+\usepackage{subcaption}
+
+% easier partial derivatives
+\usepackage{derivative}
+
+\setlength{\parskip}{0cm}
+\setlength{\parindent}{0cm}
+
+\newcommand*\Laplace{\mathop{}\!\mathbin\bigtriangleup}
+\newcommand*\DAlambert{\mathop{}\!\mathbin\Box}
+
+
+%\renewcommand{\thesubsection}{\alph{subsection})}
+
+
+\begin{document}
+\thispagestyle{fancy}
+
+\subsubsection*{1. What is “Quantum Information”?}
+
+The term “Quantum Information” can be discussed by looking at the two parts, 
+“Quantum” and “Information”, so I will start by intrucing what “normal” information 
+(or non-quantum information) is. \\
+Information can be defined as  a quantified surprise of the 
+outcome of a random event. As an example, if we throw a dice, we have no knowledge of 
+the outcome (each number 1-6 has the chance of 1/6). However, by throwing the dice, we 
+know the result and hereby gained information. A question that might arise is how we 
+can measure the amount of information gained through this observation. One typical measure 
+is known as the entropy
+\[
+	S = -\sum_{i} p_i \log(p_i),
+\]
+which for our example is $S = \log(6)$ (the base of the logarithm changes with different
+definitions). This definition is really advantagous, since we no longer need to rely on
+our intuition about information, but can easily calculate that throwing a dice yields
+more information than a coin toss or even how much information can be stored in a 4MP
+image.
+\\
+Now what makes quantum information special? The prefix quantum refers to the minimal 
+amount of a physical entity, however, here the term can be expanded to quantum-mechanical 
+information, or the information of a quantum mechanical system. So what is the quantum
+mechanical equivalent to knowing the state of a system like with a coin toss? This can
+depend on the system, some examples are
+\begin{itemize}
+	\item the energy level $E_n$ in a harmonic oscillator,
+	\item orbital angular momentum or similar behaving quantum numbers 
+		(e.g. $\hat L^2$ and $\hat L_z$, $\hat S^2$ and $\hat S_z$),
+	\item the state of a n-state system.
+\end{itemize}
+But all of these are just ways to describe the wave function. As it can be seen in
+\autoref{tab:wave_functions}, all these quantum numbers relate to a specific wave function,
+which carries all the
+information that is stored in a quantum mechanical system, which means that \emph{the wave
+function is quantum information}.
+\begin{table}[H]
+  \centering
+  \caption{Information stored in quantum numbers and the corresponding wave functions.}
+  \label{tab:wave_functions}
+  \begin{tabular}{ccc}
+  \toprule
+  Information about the System &
+  Quantum number &
+  Wavefunction \\
+  \midrule
+  Energy level in a harmonic oscillator & 
+  $E_n$ & $\psi_n(x) \propto H_n(\tilde{x}) \cdot e^{-\tilde{x}^2}, \, \tilde{x} =
+  \sqrt{\frac{m\omega}{\hbar}} x $ \\
+  % angular momentum
+  Angular momentum &
+  $l^2 = \hat L^2$, $m_l = \hat L_z$ &
+  Spherical harmonics: $\psi_{lm} \propto Y_l^m(\theta, \varphi)$ \\
+  % Qubit
+  State of a cubit &
+  $a, b$ &
+  $\ket{\psi} = a \ket{0} + b \ket{1}$ \\
+  \end{tabular}
+\end{table}
+
+\newpage
+\subsubsection*{2. Why do you want to study quantum information science?}
+My interest in quantum information science stems from two aspects: The theoretical
+background and it`s applications where quantum information science can be used to solve
+problems.
+\\
+First I want to address the theoretical background. While I enjoy learning about
+phenomena and experiments in physics, what I love even
+more is seeing how we can use math to explain how the nature behaves. One area where this
+is really noticable is quantum mechanics. Understanding how the state of a system can 
+be represented by a vector in a Hilbert space and seeing it`s time evolution as a unitary
+transformation catched my interest a lot more than the experiments in my quantum mechanics
+class. Seeing how we can use those rather abstract concepts to store and transport data
+fascinates me, which is why I am taking this course.
+\\
+In my last part I concluded that the  theoretical concepts can be used for data processing
+and that is also where my second motivation for quantum information lies. With Moore`s law
+coming to a limit it is becomming clear that we need to develop a new technology to build
+computers. While a normal transistor based computer also uses quantum mechanical effects
+to operate, using the concepts of quantum information theory to create a new way to
+do computations would be really innovative. Not only the hardware itself would be new,
+a qubit based computer is able to run algorithms specifically designed with quantum
+information in mind, so called quantum algorithms. One famous example is Shor`s algorithm,
+where a quantum computer is able to factor an integer in relatively short time, a problem
+which a classical computer can only solve for small numbers.
+
+\end{document}
