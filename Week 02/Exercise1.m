@@ -34,6 +34,7 @@ isequal(lhs, rhs) % ans = logical 1
 isequal(lhs, mid) % ans = logical 1
 
 % (d)
+disp('(d)');
 syms a1 a2 b1 b2 c1 c2 d1 d2;
 psi1 = [a1 a2]; % psi 1
 phi1 = [b1 b2]; % phi 1
