@@ -1,36 +1,45 @@
 % Grovers.m
 % Function and execution to simulate Grover's algorithm
+% As a source for the algorithm and initial state I used the original Paper
+% from Grover from 1996
 
+n = 6;
+q = floor(sqrt(2^n) * pi/4)
+MyGrover(n, q);
+%sqrt(2^n) * pi/4
 
-MyGrover(3, 5);
 
 % n is the amount of input bits
 function MyGrover(n, queries)
     N = 2^n;
 
-    correct_n = round(1 + (n - 1) * rand(1));
-    disp(correct_n);
+    correct_N = round(1 + (N - 1) * rand(1))
 
+    % (i)
+    % state gets initialised as a even distribution
+    state = ones(N,1) * 1/sqrt(N);
+
+    % (ii) a)
     % constructing the U_f as a phase shifter for the correct state
-    if correct_n > 1
-        U_f = eye(2);
-        for i = 1:(correct_n - 2)
-            U_f = kron(U_f, eye(2));
-        end
-        U_f = kron(U_f, [1 0; 0 -1]);
-    else
-        U_f = [1 0;0 -1];
-    end
-    for i = 1:(n - correct_n)
-        U_f = kron(U_f, eye(2));
+    U_f = eye(N);
+    U_f(correct_N, correct_N) = -1;
+
+    % (ii) b)
+    % constructing the diffusion matrix D
+    D = ones(N,N);
+    D = D * 2/N;
+    for i = 1:N
+        D(i,i) = -1 + 2/N;
     end
 
-    % initial state: even distribution
-    initial_state = ones(N,1) * 1/sqrt(N);
 
+    % doing the queries as we defined them before
+    for i=1:queries
+        state = U_f * state;
+        state = D * state;
+    end
 
-
-    disp(U_f * initial_state);
-
+    disp(state);
+    %return state;
 end
 
