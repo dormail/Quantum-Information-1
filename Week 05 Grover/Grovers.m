@@ -3,17 +3,49 @@
 % As a source for the algorithm and initial state I used the original Paper
 % from Grover from 1996
 
-n = 6;
-q = floor(sqrt(2^n) * pi/4)
-MyGrover(n, q);
-%sqrt(2^n) * pi/4
+close all
 
+% determining opt_queries(n)
+n_min = 2;
+n_max = 9;
+opt_queries = zeros(n_max - n_min, 1);
+for n = n_min:n_max
+    [queries, probability] = QueriesProbalities(n);
+    
+    opt_queries(n + 1 - n_min) = QueriesForBestProbability(queries, probability);
+end
+
+hold on
+n_array = n_min:n_max;
+scatter(n_array, opt_queries);
+scatter(n_array, floor(2.^(n_array / 2) * pi / 4));
+scatter(n_array, 2.^n_array);
+
+legend('Measured opt\_queries', 'Calculated opt\_queries', 'max querries');
+
+function opt_queries = QueriesForBestProbability(queries, probability)
+    [M, I] = max(probability);
+    opt_queries = queries(I(1));
+end
+
+
+function [queries, probability] = QueriesProbalities(n)
+    probability = zeros(n, 1);
+    queries = zeros(n, 1);
+
+    for i = 1:(2^n)
+        [state, correct_N] = MyGrover(n, i);
+
+        probability(i) = state(correct_N)^2;
+        queries(i) = i;
+    end
+end
 
 % n is the amount of input bits
-function MyGrover(n, queries)
+function [state, correct_N] = MyGrover(n, queries)
     N = 2^n;
 
-    correct_N = round(1 + (N - 1) * rand(1))
+    correct_N = round(1 + (N - 1) * rand(1));
 
     % (i)
     % state gets initialised as a even distribution
@@ -39,7 +71,6 @@ function MyGrover(n, queries)
         state = D * state;
     end
 
-    disp(state);
-    %return state;
+    %disp(state);
 end
 
