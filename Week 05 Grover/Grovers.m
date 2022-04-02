@@ -3,6 +3,7 @@
 % As a source for the algorithm and initial state I used the original Paper
 % from Grover from 1996
 
+clear
 close all
 hold on
 
@@ -16,7 +17,7 @@ end
 
 xlabel('queries / $(\sqrt{2^n} \cdot \frac{\pi}{4})$','interpreter','latex');
 ylabel('Probability(correct state)')
-saveas(gcf, 'OptmalQueries.png')
+saveas(gcf, 'OptimalQueries.png')
 % the plot is normalized to the optimal queries, and you can see a peak 
 % 1, so where amount of queries = optimal queries
 
