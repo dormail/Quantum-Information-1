@@ -4,51 +4,54 @@
 % from Grover from 1996
 
 close all
+hold on
 
-% % determining opt_queries(n)
-% n_min = 2;
-% n_max = 5;
-% opt_queries = zeros(n_max - n_min, 1);
-% for n = n_min:n_max
-%     [queries, probability] = QueriesProbalities(n);
-%     
-%     opt_queries(n + 1 - n_min) = QueriesForBestProbability(queries, probability);
-% end
-% 
-% hold on
-% n_array = n_min:n_max;
-% scatter(n_array, opt_queries);
-% scatter(n_array, floor(2.^(n_array / 2) * pi / 4));
-% scatter(n_array, 2.^n_array);
-
-n = 7;
-[probabilities, queries] = GroverImproved(n, 2^(n/2));
-
-scatter(queries, probabilities);
-
-
-
-function opt_queries = QueriesForBestProbability(queries, probability)
-    [M, I] = max(probability);
-    opt_queries = queries(I(1));
+% the implementation and question 3 is below
+% here is the part for question 2 regarding the optimal amount of queries
+for n=3:6
+    queries_opt = floor(sqrt(2^n)*pi/4);
+    [probabilities, queries] = GroverTestQueries(n, 2^(n/2));
+    scatter(queries / queries_opt, probabilities);
 end
 
+xlabel('queries / $(\sqrt{2^n} \cdot \frac{\pi}{4})$','interpreter','latex');
+ylabel('Probability(correct state)')
+saveas(gcf, 'OptmalQueries.png')
+% the plot is normalized to the optimal queries, and you can see a peak 
+% 1, so where amount of queries = optimal queries
 
-function [queries, probability] = QueriesProbalities(n)
-    probability = zeros(n, 1);
-    queries = zeros(n, 1);
 
-    for i = 1:(2^n)
-        [state, correct_N] = MyGrover(n, i);
+% 3rd Question
+close all
 
-        probability(i) = state(correct_N)^2;
-        queries(i) = i;
-    end
+n_min = 2;
+n_max = 11; % keep this one below 15 if you value your lifetime
+n = n_min:n_max;
+queries_opt = floor(sqrt(2.^n)*pi/4);
+runtime = n_min:n_max;
+
+for i=1:(n_max + 1 - n_min)
+    tic;
+    SimpleGrover(n(i),queries_opt(i));
+    runtime(i) = toc;
 end
+
+hold on
+scatter(n, runtime);
+scatter(n, sqrt(2.^n));
+set(gca, 'YScale', 'log');
+xlabel('n');
+
+legend('runtime', 'sqrt(2^n)');
+saveas(gcf, 'Runtime.png');
+% you can see in the plot that the actual runtime has a steeper slope
+% compared to sqrt(2^n). Since it is a logartihmic plot, we can conclude
+% that the runtime is not linear to sqrt(2^n) but much faster growing
+close all
 
 % function that makes up to max_queries on n qubits and returns the
-% probabilites
-function [probabilities, queries] = GroverImproved(n, max_queries)
+% probability of the correct state for each amount of queries 
+function [probabilities, queries] = GroverTestQueries(n, max_queries)
     max_queries = floor(max_queries);
     N = 2^n;
 
@@ -85,8 +88,11 @@ function [probabilities, queries] = GroverImproved(n, max_queries)
 end
 
 
-% n is the amount of input bits
-function [state, correct_N] = MyGrover(n, queries)
+
+
+
+% n is the amount of input bits, queries the amount of queries
+function [state, correct_N] = SimpleGrover(n, queries)
     N = 2^n;
 
     correct_N = round(1 + (N - 1) * rand(1));
