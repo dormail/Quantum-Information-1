@@ -9,6 +9,10 @@ close all
 [eC, eM] = TestThreeQubit(1,0,1)
 [eC, eM] = TestThreeQubit(0,0,1)
 
+% testing the matrix for the 5 qubit case
+eM = TestFiveQubit(1,0,1,0,1)
+
+
 % a function which tests the circuit and matrix implementation for a 
 % three qubit system
 % i1 i2 i3 should be one or zero in this test
@@ -43,6 +47,56 @@ function [errorCircuit, errorMatrix] = TestThreeQubit(i1, i2,i3)
     %CircuitResult - expectedOutput
 
     errorCircuit = norm(CircuitResult - expectedOutput);
+    errorMatrix = norm(MatrixResult - expectedOutput);
+end
+
+% the same as above but for five
+% no circuit yet)
+function errorMatrix = TestFiveQubit(i1, i2,i3, i4, i5)
+    % constructing the input
+    if i1==1
+        q1 = [0;1];
+    else
+        q1 = [1;0];
+    end
+    if i2==1
+        q2 = [0;1];
+    else
+        q2 = [1;0];
+    end
+    if i3==1
+        q3 = [0;1];
+    else
+        q3 = [1;0];
+    end
+    if i4==1
+        q4 = [0;1];
+    else
+        q4 = [1;0];
+    end
+    if i5==1
+        q5 = [0;1];
+    else
+        q5 = [1;0];
+    end
+    input = kron(q1, kron(q2, kron(q3, kron(q4, q5))));
+
+
+    x = i5 / 2;
+    o1 = [1; exp(2 * pi * 1i * x)] / sqrt(2);
+    x = (x + i4) / 2;
+    o2 = [1; exp(2 * pi * 1i * x)] / sqrt(2);
+    x = (x + i3) / 2;
+    o3 = [1; exp(2 * pi * 1i * x)] / sqrt(2);
+    x = (x + i2) / 2;
+    o4 = [1; exp(2 * pi * 1i * x)] / sqrt(2);
+    x = (x + i1) / 2;
+    o5 = [1; exp(2 * pi * 1i * x)] / sqrt(2);
+
+
+    expectedOutput = kron(o1, kron(o2, kron(o3, kron(o4, o5))));
+    MatrixResult = QFTMatrix(5) * input;
+
     errorMatrix = norm(MatrixResult - expectedOutput);
 end
 
@@ -97,10 +151,10 @@ end
 % constructs the matrix for the QFT for n qubits
 function output = QFTMatrix(n)
     N = 2^n;
-    omega = exp(2 * pi * i / N);
+    omega = exp(2 * pi * 1i / N);
     output = ones(N,N);
-    for row=1:N
-        for column=1:N
+    for row=2:N
+        for column=2:N
             output(row,column) = omega^((row-1) * (column-1));
         end
     end
