@@ -4,13 +4,22 @@ clear
 close all
 
 % testing the three qubit system
+% eC = error circuit is the error for the direct circuit implementation
+% eM = error matrix ist the error for the implementation with a matrix for
+% the whole circuit
+% the outputs are < 1^-14 so about 0.
 [eC, eM] = TestThreeQubit(0,1,1)
 [eC, eM] = TestThreeQubit(1,1,1)
 [eC, eM] = TestThreeQubit(1,0,1)
 [eC, eM] = TestThreeQubit(0,0,1)
 
 % testing the matrix for the 5 qubit case
+% same as above 
 eM = TestFiveQubit(1,0,1,0,1)
+eM = TestFiveQubit(0,0,1,0,1)
+eM = TestFiveQubit(1,1,1,0,1)
+eM = TestFiveQubit(1,0,0,1,1)
+eM = TestFiveQubit(1,1,1,1,1)
 
 
 % a function which tests the circuit and matrix implementation for a 
