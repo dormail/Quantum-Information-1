@@ -4,6 +4,7 @@
 sigma_x = [0, 1;1 0];
 sigma_z = [1, 0; 0, -1];
 
+% natural units -> hbar=1
 omega = 1;
 hbar = 1;
 
@@ -14,7 +15,7 @@ H = -1 * hbar * omega * sigma_z / 2;
 % in the exercise |psi> = .5 * |1> + .5 * |0> was given which we will
 % represent as a density operatore since the whole lindblad equation uses
 % density operators
-rho_0 = [1/2 0;0 1/2]; % confirm with the prof because it was given as a state that was not normalized
+rho_0 = [1/2 0;0 1/2];
 
 gamma = 2;
 gamma_prime = @(t) 1 - exp(-2 * gamma * t);
@@ -30,15 +31,18 @@ rho = @(t) U(t,H) * rho_tilde(t) * ctranspose(U(t,H));
 
 t = linspace(0,1,100);
 X = linspace(0,1,length(t));
+Y = linspace(0,1,length(t));
 Z = linspace(0,1,length(t));
 for i = 1:100
     X(i) = X_bloch(rho(t(i)));
+    Y(i) = Y_bloch(rho(t(i)));
     Z(i) = Z_bloch(rho(t(i)));
 end
 c = linspace(1,10,length(t)); % to better see time evolution direction
-scatter(X, Z, [], c);
+scatter3(X, Y, Z, [], c);
 xlabel('X');
-ylabel('Z');
+ylabel('Y');
+zlabel('Z');
 colorbar
 colormap jet
 
@@ -54,10 +58,15 @@ function U = U(t, H)
     U(2,2) = exp(-1i * H(2,2) * t / hbar);
 end
 
-% functions computing x and z coordinates on the bloch sphere
+% functions computing x y and z coordinates on the bloch sphere
 function X = X_bloch(density_matrix)
     sigma_x = [0, 1;1 0];
     X = trace(density_matrix * sigma_x);
+end
+
+function Y = Y_bloch(density_matrix)
+    sigma_y = [0, -1i;0 1i];
+    Y = trace(density_matrix * sigma_y);
 end
 
 function Z = Z_bloch(density_matrix)
